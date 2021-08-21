@@ -36,4 +36,6 @@ def name():
 		name = name,
 		form = form)
 
-app.run()
+if __name__ == '__main__':
+    # This will be useful for running the app locally
+    app.run(debug=False)
