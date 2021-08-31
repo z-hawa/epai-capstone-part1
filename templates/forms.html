@@ -1,0 +1,8 @@
+
+{% block content %}
+{% for file in files %}
+    <li><a href='/forms/{{file.split(".")[0]}}'>Share {{file.split(".")[0]}}</a> <a href='/forms/edit/{{file.split(".")[0]}}'>Edit {{file.split(".")[0]}}</a></li> 
+{% endfor %}
+
+<a href='/forms/create'>Create a new form</a>
+{%endblock%}
