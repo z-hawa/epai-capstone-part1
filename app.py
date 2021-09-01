@@ -95,10 +95,7 @@ class MCQForm(FlaskForm):
 class OneMoreQuestion(FlaskForm):
 	yesonemore=BooleanField('Add one more question?')
 	submit=SubmitField("Submit")
-global login_name
-login_name="tsai"
-global login_password
-login_password="tsai99"
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -120,7 +117,6 @@ def name():
 		form.user_name.data=''
 		if name=='tsai' and password=='tsai99':
 			logged_in_as="tsai"
-
 			return redirect('/forms')
 		else:
 			flash("Login failed.",'warning')
@@ -187,54 +183,79 @@ def create_form():
 		return redirect("/")
 	form=QuestionForm()
 	if form.validate_on_submit():
+		global details_dict
 		details_dict=form.data
-		print(form.data)
 		if form.question_type.data=="mcq":
-			return create_mcq(details_dict)
+			return redirect("/forms/create-mcq")
 	return render_template('create-form.html',form=form,login_status=logged_in_as)
 
-# @app.route("/forms/create-mcq",methods=['GET','POST'])
-def create_mcq(details_dict):
+@app.route("/forms/create-mcq",methods=['GET','POST'])
+def create_mcq():
 	try:
-		if not logged_in_as:
+		if not logged_in_as or not details_dict:
 			return redirect("/")
 	except:
 		return redirect("/")
 	choiceform=MCQForm()
 	if choiceform.validate_on_submit():
 		correct=choiceform.correct_choice.data-1
-		choices=list(set(choiceform.choices.data))
-		choices=[x for x in choices if x.strip()!=""]
-		print(choices,correct)
+		choices=choiceform.choices.data
+		choices=[x for x in choices if x.strip()]
 		if correct>len(choices):
 			flash("Correct choice not within bounds")
 			choiceform.correct_choice.data=None
 		elif len(choices)==1:
 			flash("Only one unique choice exists!")
 		else:
-			return redirect(url_for("/forms/new_question",details_dict))	
+			details_dict.update({'choices':choices,'correct':correct})
+			return redirect('/forms/create-new')	
 	return render_template('mcq.html',form=choiceform,login_status=logged_in_as)
 
 class FormName(FlaskForm):
-	name=StringField("What is the name of the form?",validators=[DataRequired()])
+	yesonemore=StringField("What is the name of the form?",validators=[DataRequired()])
 	submit=SubmitField("Submit")
 
-@app.route("/forms/create_new/",methods=['GET','POST'])
-def next_question(details_dict):
-	
+@app.route("/forms/create-new",methods=['GET','POST'])
+def next_question():
+	global q_list
+	try:
+		if q_list:
+			pass
+	except:
+		q_list=[]
+	try:
+		if not logged_in_as:
+			return redirect("/")
+		# elif not details_dict:
+		# 	return redirect("/")
+	except:
+		return redirect("/")
 	OneMore=OneMoreQuestion()
-	if OneMore.validate_on_submit():
+	if OneMore.is_submitted():
+		print("ji")
+		q_list.append(details_dict)
+		print(details_dict)
 		if OneMore.yesonemore.data==True:
-			return redirect(url_for('/forms/create-new',details_dict=details_dict))
+			return redirect('/forms/create')
 		else:
-			nameform=FormName()
-			if nameform.validate_on_submit():
-				with open(f"forms/{details_dict['name']}") as file:
-					print("hi")
-					# json.dump(details_dict,file)
-			return render_template("nextquestion.html",form=nameform)
+			return redirect("/forms/name-setter")
 			
 	return render_template("nextquestion.html",form=OneMore)
+
+import os.path
+
+@app.route('/forms/name-setter',methods=['GET','POST'])
+def nameform():
+	nameform=FormName()
+	if nameform.validate_on_submit():
+		details_dict['name']=nameform.yesonemore.data
+		if os.path.isfile(details_dict['name']):
+			flash("That name has already been used")
+		else:
+			with open(f"forms/{details_dict['name']}.json","w") as file:
+				json.dump(q_list,file)
+			return redirect("/forms")
+	return render_template("nextquestion.html",form=nameform)
 	# nonlocal logged_in
 	# if not logged_in:
 	# 	user_name=None
