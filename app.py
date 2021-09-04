@@ -137,7 +137,6 @@ def name():
 			return redirect("/forms")
 	except:
 		pass
-	logged_in_as=""
 	user_name=None
 	user_password=None
 	form:FlaskForm=LoginForm()
