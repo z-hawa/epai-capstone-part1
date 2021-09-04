@@ -12,13 +12,17 @@
 
 <form method="POST">
     {{ form.hidden_tag() }}
-
     {{ form.choices.label(class="form-label") }}
-
     {{ form.choices(class="form-control") }}
     <br/>
-    {{form.correct_choice.label(class="form-label")}}
-    {{ form.correct_choice(class="form-control") }}
+    {{form.correct_choices.label(class="form-label")}}
+    {{ form.correct_choices(class="form-control") }}
+    <br/>
+    {{form.image_link.label(class="form-label")}}
+    {{ form.image_link(class="form-control") }}
+    <br/>
+    {{form.question_layout.label(class="form-label")}}
+    {{ form.question_layout(class="form-control") }}
     <br/>
     {{ form.submit(class="btn btn-secondary") }}
 </form>

@@ -1,3 +1,5 @@
+
+{% block content %}
 {% for message in get_flashed_messages() %}
 	
 	<div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -10,10 +12,12 @@
 
 <form method="POST">
     {{ form.hidden_tag() }}
-
-    {{ form.yesonemore.label(class="form-label") }}
-
-    {{ form.yesonemore(class="form-control") }}
+    {{ form.sentence.label(class="form-label") }}
+    {{ form.sentence(class="form-control") }}
+    <br/>
+    {{form.blank.label(class="form-label")}}
+    {{ form.blank(class="form-control") }}
     <br/>
     {{ form.submit(class="btn btn-secondary") }}
 </form>
+{%endblock%}
