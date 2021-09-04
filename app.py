@@ -269,18 +269,24 @@ def next_question():
 		if OneMore.yesonemore.data==True:
 			return redirect('/forms/create')
 		else:
-			return redirect("/forms/name-setter")
+			return redirect("/forms/create/name-setter")
 			
 	return render_template("nextquestion.html",form=OneMore)
 
-@app.route('/forms/name-setter',methods=['GET','POST'])
+@app.route('/forms/create/name-setter',methods=['GET','POST'])
 def nameform():
 	global q_list
 	global details_dict
-	if not details_dict:
+	try:
+		if details_dict:
+			pass
+	except:
 		return redirect("/")
-	if not q_list:
-		return redirect("/")
+	try:
+		if q_list:
+			pass
+	except:
+		return redirect('/')
 	nameform=FormName()
 	if nameform.validate_on_submit():
 		details_dict.update({'name':nameform.yesonemore.data})
