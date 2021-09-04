@@ -147,6 +147,8 @@ def name():
 		form.user_name.data=''
 		if name=='tsai' and password=='tsai99':
 			logged_in_as="tsai"
+			global logged_in
+			logged_in=True
 			return redirect('/forms')
 		else:
 			flash("Login failed.",'warning')
@@ -170,6 +172,7 @@ def name():
 
 @app.route('/forms',methods=['GET','POST'])
 def all_forms():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -181,6 +184,7 @@ def all_forms():
 
 @app.route("/forms/edit/<hash>")
 def edit_form(hash):
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -207,6 +211,7 @@ def form(hash):
 
 @app.route("/forms/create",methods=['GET','POST'])
 def create_form():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -240,6 +245,7 @@ def create_form():
 
 @app.route("/forms/create-new",methods=['GET','POST'])
 def next_question():
+	global logged_in_as
 	global q_list
 	global details_dict
 	try:
@@ -318,6 +324,7 @@ def nameform():
 
 @app.route("/forms/create/mcq",methods=['GET','POST'])
 def create_mcq():
+	global logged_in_as
 	try:
 		if not logged_in_as or not details_dict:
 			return redirect("/")
@@ -340,6 +347,7 @@ def create_mcq():
 
 @app.route("/forms/create/ma",methods=['GET','POST'])
 def create_ma():
+	global logged_in_as
 	try:
 		if not logged_in_as or not details_dict:
 			return redirect("/")
@@ -361,6 +369,7 @@ def create_ma():
 
 @app.route("/forms/create/pmcq",methods=['GET','POST'])
 def create_pmcq():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -386,6 +395,7 @@ def create_pmcq():
 
 @app.route("/forms/create/pma",methods=['GET','POST'])
 def create_pma():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -411,6 +421,7 @@ def create_pma():
 
 @app.route('/forms/create/likert',methods=['GET','POST'])
 def create_likert():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -429,6 +440,7 @@ def create_likert():
 
 @app.route('/forms/create/fiob',methods=['GET','POST'])
 def create_FIOB():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -450,6 +462,7 @@ def create_FIOB():
 
 @app.route('/forms/create/fitb',methods=['GET','POST'])
 def create_FITB():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -471,6 +484,7 @@ def create_FITB():
 
 @app.route('/forms/create/dd',methods=['GET','POST'])
 def create_dd():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
@@ -496,6 +510,7 @@ def create_dd():
 
 @app.route('/forms/create/upload',methods=['GET','POST'])
 def create_upload():
+	global logged_in_as
 	try:
 		if not logged_in_as:
 			return redirect("/")
