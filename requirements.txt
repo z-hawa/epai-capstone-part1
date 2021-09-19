@@ -2,3 +2,4 @@ Flask-WTF
 Flask
 Jinja2
 gunicorn
+jellyfish

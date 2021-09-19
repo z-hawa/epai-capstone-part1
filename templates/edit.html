@@ -1,0 +1,26 @@
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	
+{% endfor %}
+{%for k,v in q_list.items()%}
+<br/>
+
+{{k.replace("_"," ").capitalize()}} : {{v if k!="question_type" else d[v]}}
+<br/> 
+{%endfor%}
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.nextquestion(class="btn btn-secondary") }}
+    <br/>
+    {{ form.beforequestion(class="btn btn-secondary") }}
+    <br/>
+    {{ form.create_new_question(class="btn btn-secondary") }}
+    <br/>
+    {{ form.delete_question(class="btn btn-secondary") }}
+    <br/>
+    {{ form.change_time(class="btn btn-secondary") }}
+</form>

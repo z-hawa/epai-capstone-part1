@@ -1,8 +1,11 @@
 
 {% block content %}
 {% for file in files %}
-    <li><a href='/forms/{{file.split(".")[0]}}'>Share {{file.split(".")[0]}}</a> <a href='/forms/edit/{{file.split(".")[0]}}'>Edit {{file.split(".")[0]}}</a></li> 
+    {% if file.endswith(".json")%}
+        <li><a href='/forms/{{file.split(".")[0]}}'>Share {{file.split(".")[0]}}</a> <a href='/forms/edit/{{file.split(".")[0]}}'>Edit {{file.split(".")[0]}}</a> <a href='/forms/{{file.split(".")[0]}}/results'>Results of {{file.split(".")[0]}}</a> <a href='/forms/download/{{file}}'>Download {{file.split(".")[0]}}</a></li> 
+    {%endif%}
 {% endfor %}
 
 <a href='/forms/create'>Create a new form</a>
+<a href='/forms/upload-new'>Upload a form !</a>
 {%endblock%}

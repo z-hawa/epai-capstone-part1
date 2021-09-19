@@ -1,0 +1,34 @@
+<h>
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	
+{% endfor %}
+<form method="post">
+    {{ form.csrf_token }}
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                {% for rtg in form.rating_choices %}
+                <th>{{rtg}}</th>
+                {%endfor%}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for radio in form.choices %}
+                <td class="question_align">Question<td>
+                    <td>{{ radio}}</td><br/>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="submit">Submit</button>
+
+</form>

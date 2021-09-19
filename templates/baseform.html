@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.right {
+  float: right;
+  width: 300px;
+  border: 3px solid #73AD21;
+  padding: 10px;
+}
+</style>
+</head>
+<body>
+{% for message in get_flashed_messages() %}
+	
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	  {{ message }}
+	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+{% endfor %}
+
+<form method="POST">
+	{%if picture_link%}
+	{%if layout=="above"%}
+	<img src={{picture_link}}>
+	{%elif layout=="side"%}
+	<p><img src={{picture_link}} style="float:left"></p>
+	{%endif%}
+	{%endif%}
+	<h4>{{question_string}}</h4>
+	{% for e in form_attribs %}
+	{{ e.label(class="form-label") }}
+    {{ e(class="form-control") }}
+    <br/>
+	{%endfor%}
+    {{ form.submit(class="btn btn-secondary") }}
+	{{ form.csrf_token }}
+</form>
+</body>
+</html>

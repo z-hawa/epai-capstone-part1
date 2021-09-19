@@ -1,0 +1,13 @@
+
+{% block content %}
+    {{ form.hidden_tag() }}
+
+    {{ form.choices.label(class="form-label") }}
+
+    {{ form.choices(class="form-control") }}
+    <br/>
+    {{form.correct_choice.label(class="form-label")}}
+    {{ form.correct_choice(class="form-control") }}
+    <br/>
+    {{ form.submit(class="btn btn-secondary") }}
+{%endblock%}

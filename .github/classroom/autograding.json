@@ -1,0 +1,15 @@
+  
+{
+  "tests": [
+    {
+      "name": "test_cases",
+      "setup": "sudo -H pip3 install pytest",
+      "run": "pytest -vv",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 100,
+      "points": 1000
+    }
+  ]
+}

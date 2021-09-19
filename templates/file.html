@@ -4,17 +4,13 @@
 	  {{ message }}
 	  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	</div>
-
 	
 {% endfor %}
-
-<form method="POST">
+<form method = "POST" action = "http://localhost:5000/uploader" enctype = "multipart/form-data">
     {{ form.hidden_tag() }}
+    {{ form.file.label(class="form-label") }}
 
-    {{ form.yesonemore.label(class="form-label") }}
-
-    {{ form.yesonemore(class="form-control") }}
+    {{ form.file(class="form-control") }}
     <br/>
     {{ form.submit(class="btn btn-secondary") }}
-    {{form.csrf_token}}
-</form>
+</div>
