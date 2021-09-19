@@ -38,7 +38,7 @@ class MyForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
 app=Flask(__name__)
 app.config['SECRET_KEY']='HMM YES YES MUCH'
-app.config['UPLOAD_FOLDER']="./forms/"
+app.config['UPLOAD_FOLDER']="forms/"
 ## CLASSES START HERE
 
 
@@ -253,7 +253,7 @@ def download_file(hmm):
 			return redirect("/")
 	except:
 		return redirect("/")
-	if hmm not in os.listdir("./forms"):
+	if hmm not in os.listdir("forms"):
 		return "Invalid download"
 	return send_file(f"forms/{hmm}",as_attachment=True)
 @app.route('/', methods=['GET', 'POST'])
@@ -307,8 +307,8 @@ def all_forms():
 	except:
 		return redirect("/")
 	# content=[f"{url_for('edit_form')}/{file}" for file in forms_path]
-	content=[f"{url_for('edit_form',hash=x.split('.')[0])}" for x in os.listdir('./forms') if x.endswith('.json')]
-	return render_template("forms.html",files=os.listdir("./forms"))
+	content=[f"{url_for('edit_form',hash=x.split('.')[0])}" for x in os.listdir('forms') if x.endswith('.json')]
+	return render_template("forms.html",files=os.listdir("forms"))
 
 @app.route("/forms/upload-new",methods=['GET','POST'])
 def upload_form():
@@ -327,7 +327,7 @@ def upload_form_():
 	if request.method == 'POST':
 		try:
 			f=request.files['file']
-			if secure_filename(f.filename) in os.listdir("./forms"):
+			if secure_filename(f.filename) in os.listdir("forms"):
 				flash("You need to upload a file with a different name as a form with that name already exists.")
 				time.sleep(5)
 				return redirect("/forms/upload-new")
@@ -577,13 +577,13 @@ def form(hash):
 									score=data+score
 									data="Score - "+str(data)
 								elif q_type=="upl":
-									student_files = [doc for doc in os.listdir("./uploadedfiles") if doc.endswith(('.txt','.pdf'))]
+									student_files = [doc for doc in os.listdir("uploadedfiles") if doc.endswith(('.txt','.pdf'))]
 									student_notes =[open(f"uploadedfiles/{File}").read() for File in  student_files]
 									filedata=request.files["file"]
 									print(os.path.isfile(f"uploadedfiles/{secure_filename(filedata.filename)}"))
 									if os.path.isfile(f"uploadedfiles/{secure_filename(filedata.filename)}"):
 										print("hi")
-										num=len([f for f in os.listdir("./uploadedfiles/") if f.endswith(secure_filename(filedata.filename))])
+										num=len([f for f in os.listdir("uploadedfiles/") if f.endswith(secure_filename(filedata.filename))])
 										filedata.save(f"uploadedfiles/({num}){secure_filename(filedata.filename)}")
 									else:
 										filedata.save(f"uploadedfiles/{secure_filename(filedata.filename)}")
