@@ -307,6 +307,7 @@ def all_forms():
 	except:
 		return redirect("/")
 	# content=[f"{url_for('edit_form')}/{file}" for file in forms_path]
+	print(os.listdir())
 	content=[f"{url_for('edit_form',hash=x.split('.')[0])}" for x in os.listdir('./forms') if x.endswith('.json')]
 	return render_template("forms.html",files=os.listdir("./forms"))
 
