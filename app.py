@@ -23,7 +23,7 @@ from wtforms import (BooleanField, PasswordField, RadioField, StringField,
 from wtforms.fields.core import (DateField, Field, FieldList, IntegerField,
                                  SelectField, SelectMultipleField)
 from wtforms.fields.simple import FileField
-from wtforms.validators import URL, DataRequired, EqualTo, Length, NumberRange, Required
+from wtforms.validators import URL, DataRequired, EqualTo, InputRequired, Length, NumberRange, Required
 from wtforms.widgets import TextArea
 
 
@@ -35,7 +35,7 @@ forms_path=glob.glob('/forms/*.json')
 
 
 class MyForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
+    name = StringField('name', validators=[InputRequired()])
 app=Flask(__name__)
 app.config['SECRET_KEY']='HMM YES YES MUCH'
 app.config['UPLOAD_FOLDER']="forms/"
@@ -43,20 +43,20 @@ app.config['UPLOAD_FOLDER']="forms/"
 
 
 class NamerForm(FlaskForm):
-	name = StringField("What's Your Name", validators=[DataRequired()])
+	name = StringField("What's Your Name", validators=[InputRequired()])
 	submit = SubmitField("Submit")
 
 class LoginForm(FlaskForm):
-	user_name=StringField("Username",validators=[DataRequired()])
-	user_password=PasswordField("Password",validators=[DataRequired()])
+	user_name=StringField("Username",validators=[InputRequired()])
+	user_password=PasswordField("Password",validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class CreateForm(FlaskForm):
-	total_marks=IntegerField("Total marks for the test",validators=[DataRequired()])
-	total_time=IntegerField('Duration limit of the test',validators=[DataRequired()])
+	total_marks=IntegerField("Total marks for the test",validators=[InputRequired()])
+	total_time=IntegerField('Duration limit of the test',validators=[InputRequired()])
 
 class QuestionForm(FlaskForm):
-	question_name=StringField("Question name",validators=[DataRequired()])
+	question_name=StringField("Question name",validators=[InputRequired()])
 	question_type=SelectField("Which type of question is this?",choices=[
     ("mcq", "Multiple Choice Questions"),
     ("MulAns", "Multiple Answers"),
@@ -78,7 +78,7 @@ class QuestionForm(FlaskForm):
     ("wbst", "Website"),
 	('upl','File Upload')])
 	required=BooleanField('Required Question?')
-	score=IntegerField('Maximum marks for this question?',validators=[DataRequired()])
+	score=IntegerField('Maximum marks for this question?',validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class OneMoreQuestion(FlaskForm):
@@ -88,77 +88,77 @@ class OneMoreQuestion(FlaskForm):
 
 class MCQ(FlaskForm):
 	choices=FieldList(StringField('Choice'),label="test",min_entries=5,max_entries=5)
-	correct_choice=IntegerField('Correct choice index number',validators=[DataRequired()])
+	correct_choice=IntegerField('Correct choice index number',validators=[InputRequired()])
 	submit=SubmitField('Submit')
 
 class MultipleAnswer(FlaskForm):
-	choices=FieldList(StringField(label='Choice',filters=[lambda x:x.strip()],validators=[DataRequired()]),label='Choices',min_entries=5,max_entries=5)
-	correct_choices=FieldList(IntegerField(label='Choice',validators=[DataRequired()]),label='Correct choice indexes')
+	choices=FieldList(StringField(label='Choice',filters=[lambda x:x.strip()],validators=[InputRequired()]),label='Choices',min_entries=5,max_entries=5)
+	correct_choices=FieldList(IntegerField(label='Choice',validators=[InputRequired()]),label='Correct choice indexes')
 	submit=SubmitField("Submit")
 
 class PictureMCQ(FlaskForm):
 	choices=FieldList(StringField('Choice'),label="test",min_entries=5,max_entries=5)
-	correct_choice=IntegerField('Correct choice index number',validators=[DataRequired()])
-	image_link=StringField(label='IMAGE URL',validators=[DataRequired(),URL()])
+	correct_choice=IntegerField('Correct choice index number',validators=[InputRequired()])
+	image_link=StringField(label='IMAGE URL',validators=[InputRequired(),URL()])
 	question_layout=RadioField('Layout ',choices=[('above','Image above question'),('side','Image on the side of the question')])
 	submit=SubmitField('Submit')
 
 class PictureMultipleChoices(FlaskForm):
-	choices=FieldList(StringField(label='Choice',filters=[lambda x:x.strip()],validators=[DataRequired()]),label='Choices',min_entries=5,max_entries=5)
-	correct_choices=FieldList(IntegerField(label='Choice',validators=[DataRequired()]),label='Correct choice indexes')
-	image_link=StringField(label='IMAGE URL',validators=[DataRequired(),URL(),lambda x:x.endswith(('png','jpeg','jpg'))])
+	choices=FieldList(StringField(label='Choice',filters=[lambda x:x.strip()],validators=[InputRequired()]),label='Choices',min_entries=5,max_entries=5)
+	correct_choices=FieldList(IntegerField(label='Choice',validators=[InputRequired()]),label='Correct choice indexes')
+	image_link=StringField(label='IMAGE URL',validators=[InputRequired(),URL(),lambda x:x.endswith(('png','jpeg','jpg'))])
 	question_layout=RadioField('Layout ',choices=[('above','Image above question'),('side','Image on the side of the question')])
 	submit=SubmitField('Submit')
 
 class Likert(FlaskForm):
-	choices=FieldList(StringField(label='Likert option',filters=[lambda x:x.strip()],validators=[DataRequired()]),label='Choices',min_entries=7,max_entries=7)
-	rating_choices=FieldList(StringField(label='Choice',filters=[lambda x:x.strip()],validators=[DataRequired()]),label='Rating strings',min_entries=5,max_entries=5)
+	choices=FieldList(StringField(label='Likert option',filters=[lambda x:x.strip()],validators=[InputRequired()]),label='Choices',min_entries=7,max_entries=7)
+	rating_choices=FieldList(StringField(label='Choice',filters=[lambda x:x.strip()],validators=[InputRequired()]),label='Rating strings',min_entries=5,max_entries=5)
 	submit=SubmitField('Submit')
 
 class FillInOneBlank(FlaskForm):
-	sentence=StringField("What is the sentence? (Please indicate the blank with a series of underscores)",validators=[DataRequired()])
-	blank=StringField("What is the correct blank/answer?",validators=[DataRequired()],filters=[lambda x:x.strip()])
+	sentence=StringField("What is the sentence? (Please indicate the blank with a series of underscores)",validators=[InputRequired()])
+	blank=StringField("What is the correct blank/answer?",validators=[InputRequired()],filters=[lambda x:x.strip()])
 	submit=SubmitField("Submit")
 
 class FillinTheBlanks(FlaskForm):
-	sentence=StringField("What is the sentence? (Please indicate the blank with two consecutive '$' signs)",validators=[DataRequired()])
-	blank=FieldList(StringField("What is the correct blank/answer according to the order?",validators=[DataRequired()],filters=[lambda x:x.strip()]),label="Blanks",min_entries=5,max_entries=7)
+	sentence=StringField("What is the sentence? (Please indicate the blank with two consecutive '$' signs)",validators=[InputRequired()])
+	blank=FieldList(StringField("What is the correct blank/answer according to the order?",validators=[InputRequired()],filters=[lambda x:x.strip()]),label="Blanks",min_entries=5,max_entries=7)
 	submit=SubmitField('Submit')
 
 class Dropdown(FlaskForm):
-	choices=FieldList(StringField(label='Choice',filters=[lambda x:x.strip()],validators=[DataRequired()]),label='Dropdown choices',min_entries=5,max_entries=5)
-	correct_choice=IntegerField('Correct choice index number',validators=[DataRequired()])
+	choices=FieldList(StringField(label='Choice',filters=[lambda x:x.strip()],validators=[InputRequired()]),label='Dropdown choices',min_entries=5,max_entries=5)
+	correct_choice=IntegerField('Correct choice index number',validators=[InputRequired()])
 	submit=SubmitField('Submit')
 
 class FileUpload(FlaskForm):
-	FileNameShouldEndWith=StringField(label='What is the file extension required to be?',validators=[DataRequired()])
+	FileNameShouldEndWith=StringField(label='What is the file extension required to be?',validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class FormName(FlaskForm):
-	yesonemore=StringField("What is the name of the form?",validators=[DataRequired(),lambda x,y:x not in ["create","create-new","edit","upload-new","download"],lambda x,y:"/" not in x])
-	time=IntegerField("How much time should be given (in minutes) to solve the quiz?",validators=[DataRequired()])
+	yesonemore=StringField("What is the name of the form?",validators=[InputRequired(),lambda x,y:x not in ["create","create-new","edit","upload-new","download"],lambda x,y:"/" not in x])
+	time=IntegerField("How much time should be given (in minutes) to solve the quiz?",validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class Integer(FlaskForm):
-	yesonemore=IntegerField('What is the correct integer?',validators=[DataRequired()])
+	yesonemore=IntegerField('What is the correct integer?',validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class Boolean(FlaskForm):
-	yesonemore=IntegerField('What is the correct option?',validators=[DataRequired()])
+	yesonemore=IntegerField('What is the correct option?',validators=[InputRequired()])
 	submit=SubmitField("Submit")
 ## FORM CREATION CLASSES END HERE
 
 ## FORM FILLING CLASSES START HERE
 class IntegerForm(FlaskForm):
-	choice=IntegerField("Answer?",validators=[DataRequired()])
+	choice=IntegerField("Answer?",validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class BooleanForm(FlaskForm):
-	choice=BooleanField("True or False? (Check if true)",validators=[DataRequired()])
+	choice=BooleanField("True or False? (Check if true)",validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class MCQForm(FlaskForm):
-	selected_choice=RadioField("Choices",validators=[DataRequired()])
+	selected_choice=RadioField("Choices",validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class MultipleAnswerForm(FlaskForm):
@@ -166,23 +166,23 @@ class MultipleAnswerForm(FlaskForm):
 	submit=SubmitField("Submit")
 
 class PhoneNumberForm(FlaskForm):
-	number=IntegerField("Phone Number",validators=[DataRequired(),NumberRange(1_000_000_000,9_999_999_999)])
+	number=IntegerField("Phone Number",validators=[InputRequired(),NumberRange(1_000_000_000,9_999_999_999)])
 	submit=SubmitField("Submit")
 
 class STextForm(FlaskForm):
-	text=StringField("Enter the response",validators=[DataRequired(),Length(1,144,"failed")])
+	text=StringField("Enter the response",validators=[InputRequired(),Length(1,144,"failed")])
 	submit=SubmitField("Submit")
 
 class LTextForm(FlaskForm):
-	text=StringField("Enter the response",validators=[DataRequired(),Length(50,500,"failed")])
+	text=StringField("Enter the response",validators=[InputRequired(),Length(50,500,"failed")])
 	submit=SubmitField("Submit")
 
 class YesNoForm(FlaskForm):
-	choice=BooleanField("Yes or No?",validators=[DataRequired()])
+	choice=BooleanField("Yes or No?",validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class EmailForm(FlaskForm):
-	email=StringField("Email",validators=[DataRequired(),lambda x,y:len(x,y.split("@"))==2])
+	email=StringField("Email",validators=[InputRequired(),lambda x,y:len(x,y.split("@"))==2])
 	submit=SubmitField("Submit")
 
 class LikertForm(FlaskForm):
@@ -191,46 +191,46 @@ class LikertForm(FlaskForm):
 	choices_passed=["1","2","3"]
 	choices=RadioField(
         'Choice?',
-        [DataRequired()],
+        [InputRequired()],
         choices=[('choice1', 'Choice One'), ('choice2', 'Choice Two')], default='choice1'
     )
 	submit=SubmitField("Submit")
 
 
 class RatingForm(FlaskForm):
-	rating=IntegerField(label="Rating",validators=[DataRequired(),lambda x,y:0<=x<=5])
+	rating=IntegerField(label="Rating",validators=[InputRequired(),lambda x,y:0<=x<=5])
 	submit=SubmitField("Submit")
 
 class DateForm(FlaskForm):
-	date=DateField(label="Date",validators=[DataRequired()])
+	date=DateField(label="Date",validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class NumberForm(FlaskForm):
-	number=StringField(label="Number",validators=[DataRequired(),lambda x,y:x.isdigit()],filters=(lambda x:x.strip()))
+	number=StringField(label="Number",validators=[InputRequired(),lambda x,y:x.isdigit()],filters=(lambda x:x.strip()))
 	submit=SubmitField("Submit")
 
 class FillInABlankForm(FlaskForm):
-	blank=StringField(validators=[DataRequired()])
+	blank=StringField(validators=[InputRequired()])
 
 class FillInBlanksForm(FlaskForm):
-	blanks=FieldList(StringField(validators=[DataRequired()],label='What are the blanks (in order of the blanks in the sentence.)'))
+	blanks=FieldList(StringField(validators=[InputRequired()],label='What are the blanks (in order of the blanks in the sentence.)'))
 
 class DropDownForm(FlaskForm):
-	dropdown=SelectField('Select one',validators=[DataRequired()])
+	dropdown=SelectField('Select one',validators=[InputRequired()])
 	submit=SubmitField("Submit")
 
 class FileUploadForm(FlaskForm):
-	file=FileField(label="Upload file",validators=[DataRequired(),FileAllowed(['pdf','txt'])])
+	file=FileField(label="Upload file",validators=[InputRequired(),FileAllowed(['pdf','txt'])])
 	submit=SubmitField("Submit")
 
 class WebsiteLinkForm(FlaskForm):
-	websitelink=StringField(label="URL for website",validators=[DataRequired(),URL()])
+	websitelink=StringField(label="URL for website",validators=[InputRequired(),URL()])
 	submit=SubmitField("Submit")
 
 ## END OF FORM FILL CLASSES
 
 class QuizUpload(FlaskForm):
-	file=FileField(label="Upload file",validators=[DataRequired(),FileAllowed('json')])
+	file=FileField(label="Upload file",validators=[InputRequired(),FileAllowed('json')])
 	submit=SubmitField("Submit")
 
 ## EDIT FORM CLASSES
@@ -243,7 +243,7 @@ class EditForm(FlaskForm):
 	change_time=SubmitField("Change time")
 
 class TimeForm(FlaskForm):
-	yesonemore=IntegerField("Time?",validators=[DataRequired()])
+	yesonemore=IntegerField("Time?",validators=[InputRequired()])
 	submit=SubmitField("Submit")
 @app.route("/forms/download/<hmm>")
 def download_file(hmm):
@@ -307,8 +307,8 @@ def all_forms():
 	except:
 		return redirect("/")
 	# content=[f"{url_for('edit_form')}/{file}" for file in forms_path]
-	content=[f"{url_for('edit_form',hash=x.split('.')[0])}" for x in os.listdir('forms') if x.endswith('.json')]
-	return render_template("forms.html",files=os.listdir("forms"))
+	content=[f"{url_for('edit_form',hash=x.split('.')[0])}" for x in os.listdir('./forms') if x.endswith('.json')]
+	return render_template("forms.html",files=os.listdir("./forms"))
 
 @app.route("/forms/upload-new",methods=['GET','POST'])
 def upload_form():
@@ -385,7 +385,7 @@ def edit_form(hash):
 					else:
 						flash('This is the last question!')
 				elif form.beforequestion.data:
-					if not len(q_list)<=current+1:
+					if not len(q_list)>=current+1:
 						current-=1
 						current_question:dict=q_list[current]
 						current_question.pop("csrf_token",None)
@@ -434,11 +434,12 @@ def form(hash):
 			form_q_list:list=json.load(filequiz)
 			try:
 				time_for_form=form_q_list[-1]["time"]
+				#csrf=form_q_list[-1]["csrf_token"]
 			except:
 				time_for_form=form_q_list[0]["time"]
+				#csrf=form_q_list[0]["csrf_token"]
 			results=[]
 			score=0
-			global flag
 			flag=False
 			def handler():
 				raise TimeoutError("Error")
@@ -448,7 +449,7 @@ def form(hash):
 			except:
 				pass
 			try:
-				for q in form_q_list:
+				for i,q in enumerate(form_q_list,start=1):
 					q_type=q["question_type"]
 					if q_type=="mcq":
 						picture_link=None
@@ -547,22 +548,21 @@ def form(hash):
 						picture_link
 					except:
 						picture_link=None
-					if former.is_submitted() and request.method=='POST':
-						if former.validate():
-							flag=True
-						elif q["required"] and former.validate_on_submit():
-							flag=True
-						elif not q["required"]:
-							flag=True
-						if flag==True:
+					if former.validate_on_submit():
+						flag=True
+					elif former.is_submitted() and not former.validate() and not q["required"]:
+						flag=True
+					else:
+						flag=False
+					if flag==True:
 							for f in form_attribs:
 								if q_type=="mcq" or q_type=="PMCQ":
-									data=q["score"] if former.selected_choice.data==q["choices"][q["correct"]] else 0
+									data=q["score"] if former.selected_choice.data==q["choices"][q["correct_choice"]] else 0
 									score=data+score
 									data="Score - "+str(data)
 								elif q_type=="MulAns" or q_type=="PMA":
 									selected_choices=former.choices.data
-									correct_choices:list=q["correct"]
+									correct_choices:list=q["correct_choices"]
 									correct=list(set(correct_choices).intersection(selected_choices))
 									data=len(correct)/len(correct_choices) if correct else 0
 									data=round(data*q["score"])
@@ -603,8 +603,7 @@ def form(hash):
 								if not former.validate():
 									data=data+" ; This question wasn't validated as the question wasn't a required one."
 								results.extend([f"{q['question_name']} : {(data)} \n"])
-								
-							if q==form_q_list[-1] and former.is_submitted():
+							if i==len(form_q_list):
 								results.insert(0,f"Score of the quiz was {score}")
 								with open(f'forms/results/{hash}{time.time().__round__()}.json',"w") as g:
 									json.dump(results,g)
@@ -616,18 +615,15 @@ def form(hash):
 								return render_template_string(f"Quiz completed ! \n You can now go close this page!")
 							flag=False
 							continue
-					else:
-						flag=False
+							
+							
 					if q_type=="upl":
 						return render_template("file copy.html",question_string=q["question_name"],form=former)
 					return render_template("baseform.html",form=former,form_attribs=form_attribs,question_string=q["question_name"],picture_link=picture_link,layout=layout)
 			except TimeoutError:
 				return "You could not complete the quiz in time... \n Good luck next time"
 			
-@app.route("/forms/test")
-def likert():
-	e=LikertForm()
-	return render_template("likertform.html",form=e)
+
 @app.route("/forms/<hash>/results")
 def form_results(hash):
 	files=os.listdir("forms/results/")
@@ -713,7 +709,6 @@ def next_question():
 						return redirect(f"/forms/edit/{name_of_edit}")
 			except:
 				pass
-				print("excp")
 			return redirect("/forms/create/name-setter")
 			
 	return render_template("nextquestion.html",form=OneMore)
@@ -815,7 +810,7 @@ def create_ma():
 		if len(correct_choices)>len(choices):
 			flash("There are more correct choices than the choices!")
 		else:
-			details_dict.update({'choices':choices,'correct_choice':correct_choices})
+			details_dict.update({'choices':choices,'correct_choices':correct_choices})
 			return redirect('/forms/create-new')
 	return render_template('MA.html',form=choiceform,login_status=logged_in_as)
 
@@ -841,7 +836,7 @@ def create_pmcq():
 		elif len(choices)==1:
 			flash("Only one unique choice exists!")
 		else:
-			details_dict.update({'choices':choices,'correct':correct,'image_link':imagelink,'layout':layout})
+			details_dict.update({'choices':choices,'correct_choice':correct,'image_link':imagelink,'layout':layout})
 			return redirect('/forms/create-new')	
 	return render_template('PMCQ.html',form=choiceform,login_status=logged_in_as)
 
