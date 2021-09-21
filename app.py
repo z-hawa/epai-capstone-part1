@@ -307,9 +307,8 @@ def all_forms():
 	except:
 		return redirect("/")
 	# content=[f"{url_for('edit_form')}/{file}" for file in forms_path]
-
-	content=[f"{url_for('edit_form',hash=x.split('.')[0])}" for x in os.listdir(os.getcwd()+'/forms') if x.endswith('.json')]
-	return render_template("forms.html",files=os.listdir(os.getcwd()+"/forms"))
+	content=[f"{url_for('edit_form',hash=x.split('.')[0])}" for x in os.listdir('/forms') if x.endswith('.json')]
+	return render_template("forms.html",files=os.listdir("./forms"))
 
 @app.route("/forms/upload-new",methods=['GET','POST'])
 def upload_form():
@@ -332,20 +331,20 @@ def upload_form_():
 				flash("You need to upload a file with a different name as a form with that name already exists.")
 				time.sleep(5)
 				return redirect("/forms/upload-new")
-			f.save(f"{os.getcwd()}/forms/{secure_filename(f.filename)}")
-			filetobedumped=json.load(open(f"{os.getcwd()}/forms/{secure_filename(f.filename)}"))
+			f.save(f"forms/{secure_filename(f.filename)}")
+			filetobedumped=json.load(open(f"forms/{secure_filename(f.filename)}"))
 			print(f.stream.read(),filetobedumped)
 		except Exception as exc:
 			return redirect("/forms/upload-new")
 		if type(filetobedumped)!=list:
-			os.remove(f"{os.getcwd()}forms/{secure_filename(f.filename)}")
+			os.remove(f"forms/{secure_filename(f.filename)}")
 			flash("Invalid file")
 			return redirect("/forms/upload-new")
 		else:
 			for e in filetobedumped:
 				if len(keys.intersection(e.keys()))!=len(keys):				
 					flash("Invalid File")
-					os.remove(f"{os.getcwd()}forms/{secure_filename(f.filename)}")
+					os.remove(f"forms/{secure_filename(f.filename)}")
 					return redirect("/forms/upload-new")
 		flash("Success")
 		return redirect("/forms/upload-new")
@@ -359,7 +358,7 @@ def edit_form(hash):
 	except:
 		return redirect("/")
 	try:
-		with open(f"{os.getcwd()}/forms/{hash}.json",encoding='utf-8') as filequiz:
+		with open(f"forms/{hash}.json",encoding='utf-8') as filequiz:
 			global q_list
 			q_list=json.load(filequiz)
 			global name_of_edit
@@ -425,13 +424,13 @@ def test_time():
 	hmm=TimeForm()
 	if hmm.validate_on_submit():
 		q_list[-1].update({"time":hmm.yesonemore.data})
-		with open(f"{os.getcwd()}/forms/{name_of_edit}.json","w") as file:
+		with open(f"forms/{name_of_edit}.json","w") as file:
 			json.dump(q_list,file)
 		return redirect(f"/forms/edit/{name_of_edit}")
 	return render_template("nextquestion.html",form=hmm)
 @app.route("/forms/<hash>",methods=["GET",'POST'])
 def form(hash):
-		with open(f"{os.getcwd()}/forms/{hash}.json",encoding='utf-8') as filequiz:
+		with open(f"forms/{hash}.json",encoding='utf-8') as filequiz:
 			form_q_list:list=json.load(filequiz)
 			try:
 				time_for_form=form_q_list[-1]["time"]
@@ -578,17 +577,17 @@ def form(hash):
 									score=data+score
 									data="Score - "+str(data)
 								elif q_type=="upl":
-									student_files = [doc for doc in os.listdir({os.getcwd()}+"/uploadedfiles") if doc.endswith(('.txt','.pdf'))]
-									student_notes =[open(f"{os.getcwd()}/uploadedfiles/{File}").read() for File in  student_files]
+									student_files = [doc for doc in os.listdir("uploadedfiles") if doc.endswith(('.txt','.pdf'))]
+									student_notes =[open(f"uploadedfiles/{File}").read() for File in  student_files]
 									filedata=request.files["file"]
 									print(os.path.isfile(f"uploadedfiles/{secure_filename(filedata.filename)}"))
 									if os.path.isfile(f"uploadedfiles/{secure_filename(filedata.filename)}"):
 										print("hi")
-										num=len([f for f in os.listdir(f"{os.getcwd()}/uploadedfiles/") if f.endswith(secure_filename(filedata.filename))])
-										filedata.save(f"{os.getcwd()}/uploadedfiles/({num}){secure_filename(filedata.filename)}")
+										num=len([f for f in os.listdir("uploadedfiles/") if f.endswith(secure_filename(filedata.filename))])
+										filedata.save(f"uploadedfiles/({num}){secure_filename(filedata.filename)}")
 									else:
-										filedata.save(f"{os.getcwd()}/uploadedfiles/{secure_filename(filedata.filename)}")
-									current=(open(f"{os.getcwd()}/uploadedfiles/{secure_filename(filedata.filename)}")).read()
+										filedata.save(f"uploadedfiles/{secure_filename(filedata.filename)}")
+									current=(open(f"uploadedfiles/{secure_filename(filedata.filename)}")).read()
 									plagiarism_results=[]
 									for student_note in student_notes:
 										plagiarism_results.append(jellyfish.jaro_similarity(student_note,current))
@@ -606,7 +605,7 @@ def form(hash):
 								results.extend([f"{q['question_name']} : {(data)} \n"])
 							if i==len(form_q_list):
 								results.insert(0,f"Score of the quiz was {score}")
-								with open(f'{os.getcwd()}/forms/results/{hash}{time.time().__round__()}.json',"w") as g:
+								with open(f'forms/results/{hash}{time.time().__round__()}.json',"w") as g:
 									json.dump(results,g)
 								flag=False
 								try:
@@ -634,7 +633,7 @@ def form_results(hash):
 	final=[]
 	for f in files:
 		final.append(f"{'~~~'*35}<br/>This version of results was obtained at {time.ctime(int(f.split(hash)[1].split('.')[0]))}")
-		with open(f"{os.getcwd()}/forms/results/{f}") as g:
+		with open(f"forms/results/{f}") as g:
 			for e in json.load(g):
 				final.append(e)
 	return '<br/>'.join(final)
@@ -703,7 +702,7 @@ def next_question():
 			try:
 				if name_of_edit:
 					print("e")
-					with open(f"{os.getcwd()}/forms/{name_of_edit}.json","w") as file:
+					with open(f"forms/{name_of_edit}.json","w") as file:
 						json.dump(q_list,file)
 						q_list=[]
 						details_dict={}
@@ -735,7 +734,7 @@ def nameform():
 		if os.path.isfile(f"forms/{nameform.yesonemore.data}.json"):
 			flash("That name has already been used")
 		else:
-			with open(f"{os.getcwd()}/forms/{details_dict['name']}.json","w") as file:
+			with open(f"forms/{details_dict['name']}.json","w") as file:
 				json.dump(q_list,file)
 				q_list=[]
 				details_dict={}
